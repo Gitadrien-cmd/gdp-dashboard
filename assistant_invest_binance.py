@@ -1,8 +1,3 @@
-import s²reamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-from binance.client import Client
-
 import time
 import requests
 import pandas as pd
@@ -90,7 +85,13 @@ st.pyplot(fig2)
 # --- Performances des Différentes Cryptomonnaies ---
 st.header("Performances des Différentes Cryptomonnaies")
 initial_investments = {asset: value / 1.2 for asset, value in values.items()}  # Exemples d'investissements initiaux
-performance = {asset: (values[asset] - initial_investments[asset]) / initial_investments[asset] * 100 for asset in values}
+performance = {}
+for asset in values:
+    if asset in initial_investments and initial_investments[asset] > 0:
+        performance[asset] = (values[asset] - initial_investments[asset]) / initial_investments[asset] * 100
+    else:
+        performance[asset] = 0  # Si l'investissement initial est zéro ou non défini, on ne calcule pas la performance
+
 performance_df = pd.DataFrame(list(performance.items()), columns=["Crypto", "Performance (%)"])
 fig3, ax3 = plt.subplots()
 ax3.bar(performance_df["Crypto"], performance_df["Performance (%)"])
